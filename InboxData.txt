@@ -1,0 +1,15 @@
+CREATE TABLE `inbox` (
+	`email` CHAR(15),
+	`msgTimestamp`  datetime,
+	`sender`	char(15),
+	`content`	char(100),
+	`rno`		int,
+	`seen`		bit,
+	PRIMARY KEY (`email`, `msgTimestamp`),
+	foreign key (`rno`) references rides
+);
+
+insert into inbox values
+        ('don@mayor.yeg', '2018-08-04 11:15:53', 'darryl@oil.com', 'Elman has big gay', 36, 0);
+        ('jane_doe@abc.ca', '2018-09-04 19:45:35', 'darryl@oil.com', 'How 6 die in holobunga when only 5.5 in cave?', 43, 0),
+        ('don@mayor.yeg', '2018-10-04 01:59:59', 'darryl@oil.com', 'RRRRrrreeEEEEEEEeeeeEEEeeeeEEEeeeeeEEEEE', 42, 1);
