@@ -1,18 +1,20 @@
 # imports
 import sqlite3
+import sys
 from memberOptions import *
 
 # Login Screen
 def login_menu():
-    print ("\n")
+    print("\n")
     # We gonna leave this line out for now, don't want keywords for people to find on Github lul
+
     print("Welcome to J. Miller's Rideshare Database System")
     print("========")
     print("A - Existing Users: Login")
     print("B - New Users: Create Account")
     print("C - Exit")
     print("========")
-    print("Type A B or C and hit enter to select an option")
+    print("Type A B or C and hit enter to select option")
     # Handles user menu choice
     while True:
         userInput = input("Function> ")
@@ -24,25 +26,25 @@ def login_menu():
 
 #Prompt for username / password
 def existing_user(conn):
-    print ("\n")
-    print ("Welcome returning user")
-    print ("Please login with your account")
-    print ("========")
+    print("\n")
+    print("Welcome returning user")
+    print("Please login with your account")
+    print("========")
 
     enteredEmail = input("Email> ")
     enteredPassword = input("Password> ")
     c = conn.cursor()
-    c.execute("SELECT	*	FROM	members	WHERE	email=:try_email and	pwd=:try_password", {"try_email":enteredEmail,	"try_password":	enteredPassword})
+    c.execute("SELECT	*	FROM	members	WHERE	email= ? COLLATE NOCASE and pwd= ?", (enteredEmail, enteredPassword))
     return c.fetchone()
 
 def login_create(conn):
     c = conn.cursor()
     unique = True
 
-    print ("\n")
-    print ("Welcome new user")
-    print ("Please follow these steps to sign up for an account")
-    print ("========")
+    print("\n")
+    print("Welcome new user")
+    print("Please follow these steps to sign up for an account")
+    print("========")
 
     while unique is True:
         duplicate = False
@@ -66,7 +68,7 @@ def login_create(conn):
 def showInbox(conn, user):
     print("Here are your unread messages:")
     c = conn.cursor()
-    c.execute("SELECT	*   FROM	inbox	WHERE	email=? and seen=0", (user[0],))
+    c.execute("SELECT    *   FROM    inbox    WHERE    email=? COLLATE NOCASE and seen=0", (user[0],))
     inbox = c.fetchall()
     for i in range(len(inbox)):
         print("At ", inbox[i][1], ", ", inbox[i][2], " said to you: ", inbox[i][3])
@@ -77,11 +79,8 @@ def showInbox(conn, user):
         print("    (Inbox is empty, no unread messages)    ")
 
 def main():
-    # Create Inital Database Connection
-    conn = sqlite3.connect('./Database.db')
+    conn = sqlite3.connect("./"+sys.argv[1])
 
-
-    # Allow the user to select their inital task
     while True:
         userInput = login_menu()
         if userInput == 'A':
@@ -99,12 +98,11 @@ def main():
 
         elif userInput == 'B':
             login_create(conn)
-            conn = sqlite3.connect('./Database.db')
+            conn = sqlite3.connect("./"+sys.argv[1])
         elif userInput == 'C':
             print("========")
-            print("Goodbye JoJo")
+            print("Goodbye")
             break
-        # Get associated information, connect to module.
 
 if __name__ == "__main__":
     main()
